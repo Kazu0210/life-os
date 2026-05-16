@@ -2,6 +2,7 @@ import axios from 'axios';
 import { DataTable } from 'simple-datatables';
 import 'simple-datatables/dist/style.css';
 import { confirmDeleteEmail } from './delete-email-alert-dialog.js';
+import { showToast } from './toast.js';
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
@@ -61,6 +62,12 @@ async function deleteEmail(id, email, button, deleteBaseUrl, getDataTable) {
         await axios.delete(`${deleteBaseUrl}/${id}`);
         button.closest('tr')?.remove();
         getDataTable()?.update();
+
+        showToast({
+            title: 'Email deleted',
+            description: `${email} has been removed.`,
+            variant: 'success',
+        });
     } catch {
         button.textContent = 'Failed';
         button.disabled = false;

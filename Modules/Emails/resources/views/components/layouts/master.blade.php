@@ -13,5 +13,7 @@
     </head>
     <body class="min-h-dvh w-full bg-[#f6faf8] font-sans text-[#1b1b18] antialiased dark:bg-[#0a0f0c] dark:text-[#ededec]">
         {{ $slot }}
+
+        <x-toast-container />
     </body>
 </html>
