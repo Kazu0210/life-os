@@ -73,5 +73,10 @@ class EmailsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) {}
+    public function destroy(Email $email): JsonResponse
+    {
+        $email->delete();
+
+        return response()->json(null, 204);
+    }
 }

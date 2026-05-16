@@ -20,6 +20,7 @@
                 id="emails-table"
                 class="w-full text-left text-sm"
                 data-url="{{ route('emails.data') }}"
+                data-delete-url="{{ url('emails') }}"
             >
                 <thead>
                     <tr>

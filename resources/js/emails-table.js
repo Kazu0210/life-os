@@ -2,6 +2,12 @@ import axios from 'axios';
 import { DataTable } from 'simple-datatables';
 import 'simple-datatables/dist/style.css';
 
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+if (csrfToken) {
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+}
+
 function formatDate(isoDate) {
     return new Date(isoDate).toLocaleString(undefined, {
         dateStyle: 'medium',
@@ -39,14 +45,37 @@ async function copyEmail(email, button) {
     }
 }
 
-function appendRow(tbody, email, createdAt) {
+async function deleteEmail(id, email, button, deleteBaseUrl, dataTable) {
+    if (! confirm(`Delete ${email}?`)) {
+        return;
+    }
+
+    const label = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Deleting…';
+
+    try {
+        await axios.delete(`${deleteBaseUrl}/${id}`);
+        button.closest('tr')?.remove();
+        dataTable.update();
+    } catch {
+        button.textContent = 'Failed';
+        button.disabled = false;
+
+        setTimeout(() => {
+            button.textContent = label;
+        }, 1500);
+    }
+}
+
+function appendRow(tbody, { id, email, created_at }, deleteBaseUrl, dataTable) {
     const row = document.createElement('tr');
 
     const emailCell = document.createElement('td');
     emailCell.textContent = email;
 
     const dateCell = document.createElement('td');
-    dateCell.textContent = formatDate(createdAt);
+    dateCell.textContent = formatDate(created_at);
 
     const actionsCell = document.createElement('td');
 
@@ -65,6 +94,7 @@ function appendRow(tbody, email, createdAt) {
     deleteButton.textContent = 'Delete';
     deleteButton.className = deleteButtonClass;
     deleteButton.setAttribute('aria-label', `Delete ${email}`);
+    deleteButton.addEventListener('click', () => deleteEmail(id, email, deleteButton, deleteBaseUrl, dataTable));
 
     actionsWrapper.append(copyButton, deleteButton);
     actionsCell.appendChild(actionsWrapper);
@@ -82,23 +112,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const tbody = table.querySelector('tbody');
     const url = table.dataset.url;
+    const deleteBaseUrl = table.dataset.deleteUrl;
 
-    try {
-        const { data } = await axios.get(url);
-
-        data.forEach((email) => {
-            appendRow(tbody, email.email, email.created_at);
-        });
-    } catch {
-        const row = document.createElement('tr');
-        const cell = document.createElement('td');
-        cell.colSpan = 3;
-        cell.textContent = 'Could not load emails.';
-        row.appendChild(cell);
-        tbody.appendChild(row);
-    }
-
-    new DataTable(table, {
+    const dataTable = new DataTable(table, {
         searchable: true,
         sortable: true,
         perPage: 10,
@@ -111,4 +127,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             noResults: 'No matching emails',
         },
     });
+
+    try {
+        const { data } = await axios.get(url);
+
+        data.forEach((email) => {
+            appendRow(tbody, email, deleteBaseUrl, dataTable);
+        });
+
+        dataTable.update();
+    } catch {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 3;
+        cell.textContent = 'Could not load emails.';
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        dataTable.update();
+    }
 });
