@@ -115,6 +115,7 @@
     }
 
     .command-modal__title {
+        margin-bottom: 1rem;
         font-size: 1.125rem;
         font-weight: 600;
         letter-spacing: -0.02em;
@@ -127,8 +128,53 @@
         }
     }
 
+    .command-modal__input {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #1b1b18;
+        background: rgba(16, 185, 129, 0.06);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        border-radius: 0.625rem;
+        outline: none;
+        -webkit-user-select: text;
+        user-select: text;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .command-modal__input::placeholder {
+        color: #6b7280;
+    }
+
+    .command-modal__input:focus {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(16, 185, 129, 0.55);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .command-modal__input {
+            color: #f4f4f5;
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+
+        .command-modal__input::placeholder {
+            color: #a1a1aa;
+        }
+
+        .command-modal__input:focus {
+            background: rgba(15, 23, 20, 0.9);
+            border-color: rgba(52, 211, 153, 0.5);
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
+        }
+    }
+
     .command-modal__hint {
-        margin-top: 0.5rem;
+        margin-top: 0.75rem;
         font-size: 0.875rem;
         color: #6b7280;
     }
@@ -188,18 +234,30 @@
     <div class="command-modal__backdrop" data-command-modal-close></div>
     <div class="command-modal__card">
         <p class="command-modal__title" id="commandModalTitle">Command palette</p>
+        <input
+            type="text"
+            class="command-modal__input"
+            id="commandModalInput"
+            placeholder="Search or type a command..."
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search or type a command"
+        >
         <p class="command-modal__hint">Press <kbd>Ctrl</kbd>+<kbd>K</kbd> or <kbd>Esc</kbd> to close</p>
     </div>
 </div>
 
 <script>
     const commandModal = document.getElementById('commandModal');
+    const commandModalInput = document.getElementById('commandModalInput');
 
     function openCommandModal() {
         commandModal.hidden = false;
         commandModal.setAttribute('aria-hidden', 'false');
         requestAnimationFrame(() => {
             commandModal.classList.add('is-open');
+            commandModalInput.focus();
+            commandModalInput.select();
         });
         document.body.classList.add('modal-open');
     }
@@ -208,6 +266,8 @@
         commandModal.classList.remove('is-open');
         commandModal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
+        commandModalInput.blur();
+        commandModalInput.value = '';
 
         const onTransitionEnd = (event) => {
             if (event.target !== commandModal || event.propertyName !== 'opacity') {
