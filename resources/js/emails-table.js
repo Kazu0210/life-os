@@ -9,8 +9,14 @@ function formatDate(isoDate) {
     });
 }
 
+const actionButtonClass =
+    'inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-medium transition-colors focus:outline-none focus:ring-2';
+
 const copyButtonClass =
-    'inline-flex items-center rounded-md border border-emerald-500/25 px-2.5 py-1 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:border-emerald-400/30 dark:text-emerald-400 dark:hover:bg-emerald-950/50';
+    `${actionButtonClass} border-emerald-500/25 text-emerald-700 hover:bg-emerald-50 focus:ring-emerald-500/40 dark:border-emerald-400/30 dark:text-emerald-400 dark:hover:bg-emerald-950/50`;
+
+const deleteButtonClass =
+    `${actionButtonClass} border-red-500/25 text-red-700 hover:bg-red-50 focus:ring-red-500/40 dark:border-red-400/30 dark:text-red-400 dark:hover:bg-red-950/50`;
 
 async function copyEmail(email, button) {
     const label = button.textContent;
@@ -43,13 +49,25 @@ function appendRow(tbody, email, createdAt) {
     dateCell.textContent = formatDate(createdAt);
 
     const actionsCell = document.createElement('td');
+
+    const actionsWrapper = document.createElement('div');
+    actionsWrapper.className = 'flex items-center gap-2';
+
     const copyButton = document.createElement('button');
     copyButton.type = 'button';
     copyButton.textContent = 'Copy';
     copyButton.className = copyButtonClass;
     copyButton.setAttribute('aria-label', `Copy ${email}`);
     copyButton.addEventListener('click', () => copyEmail(email, copyButton));
-    actionsCell.appendChild(copyButton);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = deleteButtonClass;
+    deleteButton.setAttribute('aria-label', `Delete ${email}`);
+
+    actionsWrapper.append(copyButton, deleteButton);
+    actionsCell.appendChild(actionsWrapper);
 
     row.append(emailCell, dateCell, actionsCell);
     tbody.appendChild(row);
