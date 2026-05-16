@@ -7,6 +7,15 @@
         </h1>
 
         <div class="relative mt-10 w-full">
+            <div class="mb-4 flex justify-end">
+                <a
+                    href="{{ route('emails.create') }}"
+                    class="inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:focus:ring-offset-[#0a0f0c]"
+                >
+                    Add new email
+                </a>
+            </div>
+
             <table id="emails-table" class="w-full text-left text-sm">
                 <thead>
                     <tr>
