@@ -8,4 +8,137 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --animate-bg-in: bg-in 1.2s ease-out both;
+    --animate-word-in: word-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    --animate-gradient-shift: gradient-shift 4s ease-in-out infinite;
+    --animate-backdrop-blur-in: backdrop-blur-in 0.28s ease forwards;
+    --animate-card-blur-in: card-blur-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+
+@keyframes bg-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes word-in {
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.92);
+        filter: blur(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes gradient-shift {
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes backdrop-blur-in {
+    from {
+        background-color: rgb(15 23 20 / 0.15);
+        backdrop-filter: blur(0);
+    }
+    to {
+        background-color: rgb(15 23 20 / 0.5);
+        backdrop-filter: blur(16px);
+    }
+}
+
+@keyframes card-blur-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.88) translateY(24px);
+        filter: blur(32px);
+    }
+    35% {
+        opacity: 0.6;
+        filter: blur(18px);
+    }
+    65% {
+        opacity: 0.9;
+        filter: blur(6px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+}
+
+@layer components {
+    .welcome-glow {
+        background:
+            radial-gradient(ellipse 80% 50% at 50% -20%, rgb(16 185 129 / 0.14), transparent),
+            radial-gradient(ellipse 60% 40% at 100% 100%, rgb(34 197 94 / 0.1), transparent),
+            radial-gradient(ellipse 50% 30% at 0% 80%, rgb(5 150 105 / 0.08), transparent);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .welcome-glow {
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgb(52 211 153 / 0.2), transparent),
+                radial-gradient(ellipse 60% 40% at 100% 100%, rgb(74 222 128 / 0.14), transparent),
+                radial-gradient(ellipse 50% 30% at 0% 80%, rgb(16 185 129 / 0.12), transparent);
+        }
+
+        .command-modal.is-open .command-modal-backdrop {
+            animation-name: backdrop-blur-in-dark;
+        }
+    }
+
+    @keyframes backdrop-blur-in-dark {
+        from {
+            background-color: rgb(0 0 0 / 0.25);
+            backdrop-filter: blur(0);
+        }
+        to {
+            background-color: rgb(0 0 0 / 0.65);
+            backdrop-filter: blur(16px);
+        }
+    }
+
+    .command-modal.is-open .command-modal-backdrop {
+        @apply animate-backdrop-blur-in;
+    }
+
+    .command-modal.is-open .command-modal-card {
+        @apply animate-card-blur-in opacity-100 scale-100 translate-y-0 blur-none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .command-modal.is-open .command-modal-backdrop {
+            backdrop-filter: blur(16px);
+            background-color: rgb(15 23 20 / 0.5);
+            animation: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .command-modal.is-open .command-modal-backdrop {
+                background-color: rgb(0 0 0 / 0.65);
+            }
+        }
+
+        .command-modal-card,
+        .command-modal.is-open .command-modal-card {
+            opacity: 1;
+            filter: none;
+            transform: none;
+            animation: none;
+        }
+    }
 }

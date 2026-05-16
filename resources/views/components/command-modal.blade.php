@@ -1,257 +1,53 @@
-<style>
-    .command-modal {
-        position: fixed;
-        inset: 0;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1.25rem;
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        transition: opacity 0.22s ease, visibility 0.22s ease;
-    }
-
-    .command-modal.is-open {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-    }
-
-    .command-modal__backdrop {
-        position: absolute;
-        inset: 0;
-        background: rgba(15, 23, 20, 0.2);
-        backdrop-filter: blur(0);
-        -webkit-backdrop-filter: blur(0);
-    }
-
-    .command-modal.is-open .command-modal__backdrop {
-        animation: backdrop-blur-in 0.28s ease forwards;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        @keyframes backdrop-blur-in {
-            from {
-                background: rgba(0, 0, 0, 0.25);
-                backdrop-filter: blur(0);
-                -webkit-backdrop-filter: blur(0);
-            }
-            to {
-                background: rgba(0, 0, 0, 0.65);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-            }
-        }
-    }
-
-    .command-modal__card {
-        position: relative;
-        z-index: 1;
-        width: min(100%, 28rem);
-        padding: 1.5rem;
-        border-radius: 1rem;
-        border: 1px solid rgba(16, 185, 129, 0.2);
-        background: rgba(255, 255, 255, 0.92);
-        box-shadow:
-            0 24px 48px -12px rgba(5, 150, 105, 0.2),
-            0 0 0 1px rgba(255, 255, 255, 0.5) inset;
-        opacity: 0;
-        transform: scale(0.9) translateY(20px);
-        filter: blur(28px);
-        transition:
-            opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-            transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-            filter 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .command-modal.is-open .command-modal__card {
-        animation: card-blur-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
-    }
-
-    @keyframes backdrop-blur-in {
-        from {
-            background: rgba(15, 23, 20, 0.15);
-            backdrop-filter: blur(0);
-            -webkit-backdrop-filter: blur(0);
-        }
-        to {
-            background: rgba(15, 23, 20, 0.5);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-    }
-
-    @keyframes card-blur-in {
-        0% {
-            opacity: 0;
-            transform: scale(0.88) translateY(24px);
-            filter: blur(32px);
-        }
-        35% {
-            opacity: 0.6;
-            filter: blur(18px);
-        }
-        65% {
-            opacity: 0.9;
-            filter: blur(6px);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            filter: blur(0);
-        }
-    }
-
-    @media (prefers-color-scheme: dark) {
-        .command-modal__card {
-            background: rgba(20, 28, 24, 0.95);
-            border-color: rgba(52, 211, 153, 0.25);
-            box-shadow:
-                0 24px 48px -12px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.06) inset;
-        }
-    }
-
-    .command-modal__title {
-        margin-bottom: 1rem;
-        font-size: 1.125rem;
-        font-weight: 600;
-        letter-spacing: -0.02em;
-        color: #1b1b18;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        .command-modal__title {
-            color: #f4f4f5;
-        }
-    }
-
-    .command-modal__input {
-        display: block;
-        width: 100%;
-        padding: 0.75rem 1rem;
-        font-family: inherit;
-        font-size: 1rem;
-        line-height: 1.5;
-        color: #1b1b18;
-        background: rgba(16, 185, 129, 0.06);
-        border: 1px solid rgba(16, 185, 129, 0.25);
-        border-radius: 0.625rem;
-        outline: none;
-        -webkit-user-select: text;
-        user-select: text;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    }
-
-    .command-modal__input::placeholder {
-        color: #6b7280;
-    }
-
-    .command-modal__input:focus {
-        background: rgba(255, 255, 255, 0.95);
-        border-color: rgba(16, 185, 129, 0.55);
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
-    }
-
-    @media (prefers-color-scheme: dark) {
-        .command-modal__input {
-            color: #f4f4f5;
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(52, 211, 153, 0.3);
-        }
-
-        .command-modal__input::placeholder {
-            color: #a1a1aa;
-        }
-
-        .command-modal__input:focus {
-            background: rgba(15, 23, 20, 0.9);
-            border-color: rgba(52, 211, 153, 0.5);
-            box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
-        }
-    }
-
-    .command-modal__hint {
-        margin-top: 0.75rem;
-        font-size: 0.875rem;
-        color: #6b7280;
-    }
-
-    .command-modal__hint kbd {
-        display: inline-block;
-        padding: 0.1em 0.4em;
-        font-family: inherit;
-        font-size: 0.8em;
-        border-radius: 0.25rem;
-        border: 1px solid rgba(16, 185, 129, 0.25);
-        background: rgba(16, 185, 129, 0.08);
-    }
-
-    @media (prefers-color-scheme: dark) {
-        .command-modal__hint {
-            color: #a1a1aa;
-        }
-    }
-
-    body.modal-open {
-        overflow: hidden;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .command-modal,
-        .command-modal__backdrop,
-        .command-modal__card {
-            transition: none;
-            animation: none;
-        }
-
-        .command-modal.is-open .command-modal__backdrop {
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            background: rgba(15, 23, 20, 0.5);
-        }
-
-        .command-modal__card,
-        .command-modal.is-open .command-modal__card {
-            opacity: 1;
-            filter: none;
-            transform: none;
-        }
-    }
-</style>
-
 <div
-    class="command-modal"
     id="commandModal"
+    class="command-modal fixed inset-0 z-[100] flex items-center justify-center p-5 opacity-0 invisible pointer-events-none transition-[opacity,visibility] duration-200 ease-out [&.is-open]:visible [&.is-open]:pointer-events-auto [&.is-open]:opacity-100 motion-reduce:transition-none"
     role="dialog"
     aria-modal="true"
     aria-labelledby="commandModalTitle"
     aria-hidden="true"
     hidden
 >
-    <div class="command-modal__backdrop" data-command-modal-close></div>
-    <div class="command-modal__card">
-        <p class="command-modal__title" id="commandModalTitle">Command palette</p>
+    <div
+        class="command-modal-backdrop absolute inset-0 bg-emerald-950/15 backdrop-blur-none motion-reduce:backdrop-blur-xl"
+        data-command-modal-close
+    ></div>
+
+    <div
+        class="command-modal-card relative z-10 w-full max-w-md scale-90 translate-y-5 rounded-2xl border border-emerald-500/20 bg-white/92 p-6 opacity-0 shadow-[0_24px_48px_-12px_rgb(5_150_105/0.2),inset_0_0_0_1px_rgb(255_255_255/0.5)] blur-[28px] transition-[opacity,transform,filter] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] dark:border-emerald-400/25 dark:bg-[#141c18]/95 dark:shadow-[0_24px_48px_-12px_rgb(0_0_0/0.5),inset_0_0_0_1px_rgb(255_255_255/0.06)] motion-reduce:blur-none motion-reduce:transition-none"
+    >
+        <p
+            id="commandModalTitle"
+            class="mb-4 text-lg font-semibold tracking-tight text-[#1b1b18] dark:text-zinc-100"
+        >
+            Command palette
+        </p>
+
         <input
             type="text"
-            class="command-modal__input"
             id="commandModalInput"
+            class="block w-full select-text rounded-lg border border-emerald-500/25 bg-emerald-500/5 px-4 py-3 text-base text-[#1b1b18] outline-none transition-[border-color,box-shadow,background] duration-200 placeholder:text-gray-500 focus:border-emerald-500/55 focus:bg-white/95 focus:shadow-[0_0_0_3px_rgb(16_185_129/0.15)] dark:border-emerald-400/30 dark:bg-emerald-500/10 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-emerald-400/50 dark:focus:bg-[#0f1714]/90 dark:focus:shadow-[0_0_0_3px_rgb(52_211_153/0.2)]"
             placeholder="Search or type a command..."
             autocomplete="off"
             spellcheck="false"
             autofocus
             aria-label="Search or type a command"
         >
-        <p class="command-modal__hint">Press <kbd>Ctrl</kbd>+<kbd>K</kbd> or <kbd>Esc</kbd> to close</p>
+
+        <p class="mt-3 text-sm text-gray-500 dark:text-zinc-400">
+            Press
+            <kbd class="inline-block rounded border border-emerald-500/25 bg-emerald-500/10 px-1.5 py-0.5 font-sans text-[0.8em]">Ctrl</kbd>+<kbd class="inline-block rounded border border-emerald-500/25 bg-emerald-500/10 px-1.5 py-0.5 font-sans text-[0.8em]">K</kbd>
+            or
+            <kbd class="inline-block rounded border border-emerald-500/25 bg-emerald-500/10 px-1.5 py-0.5 font-sans text-[0.8em]">Esc</kbd>
+            to close
+        </p>
     </div>
 </div>
 
 <script>
     const commandModal = document.getElementById('commandModal');
     const commandModalInput = document.getElementById('commandModalInput');
-    const commandModalCard = commandModal.querySelector('.command-modal__card');
+    const commandModalBackdrop = commandModal.querySelector('.command-modal-backdrop');
+    const commandModalCard = commandModal.querySelector('.command-modal-card');
 
     function focusCommandInput() {
         commandModalInput.focus({ preventScroll: true });
@@ -260,7 +56,7 @@
     function openCommandModal() {
         commandModal.hidden = false;
         commandModal.setAttribute('aria-hidden', 'false');
-        document.body.classList.add('modal-open');
+        document.body.classList.add('overflow-hidden');
 
         requestAnimationFrame(() => {
             commandModal.classList.add('is-open');
@@ -284,7 +80,7 @@
     function closeCommandModal() {
         commandModal.classList.remove('is-open');
         commandModal.setAttribute('aria-hidden', 'true');
-        document.body.classList.remove('modal-open');
+        document.body.classList.remove('overflow-hidden');
         commandModalInput.blur();
         commandModalInput.value = '';
 
@@ -320,5 +116,5 @@
         }
     });
 
-    commandModal.querySelector('[data-command-modal-close]').addEventListener('click', closeCommandModal);
+    commandModalBackdrop.addEventListener('click', closeCommandModal);
 </script>
