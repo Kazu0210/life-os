@@ -26,6 +26,7 @@
                         value="{{ old('email') }}"
                         class="block w-full rounded-lg border border-emerald-500/25 bg-white/90 px-4 py-2.5 text-sm text-[#1b1b18] outline-none transition-[border-color,box-shadow] focus:border-emerald-500/55 focus:shadow-[0_0_0_3px_rgb(16_185_129/0.15)] dark:border-emerald-400/30 dark:bg-[#141c18]/95 dark:text-zinc-100"
                         required
+                        autofocus
                     >
                 </div>
 

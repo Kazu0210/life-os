@@ -21,6 +21,9 @@ const actionButtonClass =
 const copyButtonClass =
     `${actionButtonClass} border-emerald-500/25 text-emerald-700 hover:bg-emerald-50 focus:ring-emerald-500/40 dark:border-emerald-400/30 dark:text-emerald-400 dark:hover:bg-emerald-950/50`;
 
+const editButtonClass =
+    `${actionButtonClass} border-zinc-500/25 text-zinc-700 hover:bg-zinc-50 focus:ring-zinc-500/40 dark:border-zinc-400/30 dark:text-zinc-300 dark:hover:bg-zinc-900/50`;
+
 const deleteButtonClass =
     `${actionButtonClass} border-red-500/25 text-red-700 hover:bg-red-50 focus:ring-red-500/40 dark:border-red-400/30 dark:text-red-400 dark:hover:bg-red-950/50`;
 
@@ -89,6 +92,12 @@ function appendRow(tbody, { id, email, created_at }, deleteBaseUrl, dataTable) {
     copyButton.setAttribute('aria-label', `Copy ${email}`);
     copyButton.addEventListener('click', () => copyEmail(email, copyButton));
 
+    const editButton = document.createElement('button');
+    editButton.type = 'button';
+    editButton.textContent = 'Edit';
+    editButton.className = editButtonClass;
+    editButton.setAttribute('aria-label', `Edit ${email}`);
+
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.textContent = 'Delete';
@@ -96,7 +105,7 @@ function appendRow(tbody, { id, email, created_at }, deleteBaseUrl, dataTable) {
     deleteButton.setAttribute('aria-label', `Delete ${email}`);
     deleteButton.addEventListener('click', () => deleteEmail(id, email, deleteButton, deleteBaseUrl, dataTable));
 
-    actionsWrapper.append(copyButton, deleteButton);
+    actionsWrapper.append(copyButton, editButton, deleteButton);
     actionsCell.appendChild(actionsWrapper);
 
     row.append(emailCell, dateCell, actionsCell);
