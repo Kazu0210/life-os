@@ -241,6 +241,7 @@
             placeholder="Search or type a command..."
             autocomplete="off"
             spellcheck="false"
+            autofocus
             aria-label="Search or type a command"
         >
         <p class="command-modal__hint">Press <kbd>Ctrl</kbd>+<kbd>K</kbd> or <kbd>Esc</kbd> to close</p>
@@ -250,16 +251,34 @@
 <script>
     const commandModal = document.getElementById('commandModal');
     const commandModalInput = document.getElementById('commandModalInput');
+    const commandModalCard = commandModal.querySelector('.command-modal__card');
+
+    function focusCommandInput() {
+        commandModalInput.focus({ preventScroll: true });
+    }
 
     function openCommandModal() {
         commandModal.hidden = false;
         commandModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+
         requestAnimationFrame(() => {
             commandModal.classList.add('is-open');
-            commandModalInput.focus();
-            commandModalInput.select();
+            focusCommandInput();
+            requestAnimationFrame(focusCommandInput);
         });
-        document.body.classList.add('modal-open');
+
+        setTimeout(focusCommandInput, 50);
+
+        const onCardReady = (event) => {
+            if (event.target !== commandModalCard || event.animationName !== 'card-blur-in') {
+                return;
+            }
+            focusCommandInput();
+            commandModalCard.removeEventListener('animationend', onCardReady);
+        };
+
+        commandModalCard.addEventListener('animationend', onCardReady);
     }
 
     function closeCommandModal() {
