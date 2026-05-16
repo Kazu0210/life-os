@@ -3,7 +3,9 @@
 namespace Modules\Emails\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Modules\Emails\Models\Email;
 
 class EmailsController extends Controller
 {
@@ -26,8 +28,14 @@ class EmailsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255', 'unique:emails,email'],
+        ]);
+
+        Email::create($validated);
+
         return redirect()->route('emails.index');
     }
 
