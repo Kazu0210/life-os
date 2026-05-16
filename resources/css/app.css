@@ -121,6 +121,10 @@
         @apply animate-card-blur-in opacity-100 scale-100 translate-y-0 blur-none;
     }
 
+    .datatable-wrapper {
+        @apply w-full max-w-none;
+    }
+
     .datatable-wrapper .datatable-search input,
     .datatable-wrapper .datatable-selector {
         @apply rounded-lg border border-emerald-500/25 bg-white/90 px-3 py-1.5 text-sm text-[#1b1b18] outline-none focus:border-emerald-500/55 dark:border-emerald-400/30 dark:bg-[#141c18]/95 dark:text-zinc-100;

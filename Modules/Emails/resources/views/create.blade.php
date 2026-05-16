@@ -1,5 +1,5 @@
 <x-emails::layouts.master>
-    <main class="relative mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-5 py-8">
+    <main class="relative flex min-h-dvh w-full flex-col px-5 py-8">
         <div class="welcome-glow pointer-events-none absolute inset-0 animate-bg-in motion-reduce:animate-none" aria-hidden="true"></div>
 
         <div class="relative">
