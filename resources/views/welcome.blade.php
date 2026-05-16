@@ -29,6 +29,8 @@
                 color: #1b1b18;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
+                -webkit-user-select: none;
+                user-select: none;
             }
 
             @media (prefers-color-scheme: dark) {
