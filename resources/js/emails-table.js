@@ -46,7 +46,7 @@ async function copyEmail(email, button) {
     }
 }
 
-async function deleteEmail(id, email, button, deleteBaseUrl, dataTable) {
+async function deleteEmail(id, email, button, deleteBaseUrl, getDataTable) {
     const confirmed = await confirmDeleteEmail(email);
 
     if (! confirmed) {
@@ -60,7 +60,7 @@ async function deleteEmail(id, email, button, deleteBaseUrl, dataTable) {
     try {
         await axios.delete(`${deleteBaseUrl}/${id}`);
         button.closest('tr')?.remove();
-        dataTable.update();
+        getDataTable()?.update();
     } catch {
         button.textContent = 'Failed';
         button.disabled = false;
@@ -71,7 +71,7 @@ async function deleteEmail(id, email, button, deleteBaseUrl, dataTable) {
     }
 }
 
-function appendRow(tbody, { id, email, created_at }, deleteBaseUrl, dataTable) {
+function appendRow(tbody, { id, email, created_at }, deleteBaseUrl, getDataTable) {
     const row = document.createElement('tr');
 
     const emailCell = document.createElement('td');
@@ -97,7 +97,7 @@ function appendRow(tbody, { id, email, created_at }, deleteBaseUrl, dataTable) {
     deleteButton.textContent = 'Delete';
     deleteButton.className = deleteButtonClass;
     deleteButton.setAttribute('aria-label', `Delete ${email}`);
-    deleteButton.addEventListener('click', () => deleteEmail(id, email, deleteButton, deleteBaseUrl, dataTable));
+    deleteButton.addEventListener('click', () => deleteEmail(id, email, deleteButton, deleteBaseUrl, getDataTable));
 
     actionsWrapper.append(copyButton, deleteButton);
     actionsCell.appendChild(actionsWrapper);
@@ -117,7 +117,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     const url = table.dataset.url;
     const deleteBaseUrl = table.dataset.deleteUrl;
 
-    const dataTable = new DataTable(table, {
+    let dataTable;
+
+    try {
+        const { data } = await axios.get(url);
+
+        data.forEach((email) => {
+            appendRow(tbody, email, deleteBaseUrl, () => dataTable);
+        });
+    } catch {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 3;
+        cell.textContent = 'Could not load emails.';
+        row.appendChild(cell);
+        tbody.appendChild(row);
+    }
+
+    dataTable = new DataTable(table, {
         searchable: true,
         sortable: true,
         perPage: 10,
@@ -130,22 +147,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             noResults: 'No matching emails',
         },
     });
-
-    try {
-        const { data } = await axios.get(url);
-
-        data.forEach((email) => {
-            appendRow(tbody, email, deleteBaseUrl, dataTable);
-        });
-
-        dataTable.update();
-    } catch {
-        const row = document.createElement('tr');
-        const cell = document.createElement('td');
-        cell.colSpan = 3;
-        cell.textContent = 'Could not load emails.';
-        row.appendChild(cell);
-        tbody.appendChild(row);
-        dataTable.update();
-    }
 });
