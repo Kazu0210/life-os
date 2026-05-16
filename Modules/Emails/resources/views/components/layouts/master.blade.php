@@ -15,5 +15,6 @@
         {{ $slot }}
 
         <x-toast-container />
+        <x-command-modal />
     </body>
 </html>
