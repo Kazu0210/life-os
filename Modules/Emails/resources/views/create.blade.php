@@ -18,51 +18,15 @@
                 @csrf
 
                 <div>
-                    <label for="subject" class="mb-1.5 block text-sm font-medium text-[#1b1b18] dark:text-zinc-100">Subject</label>
-                    <input
-                        type="text"
-                        name="subject"
-                        id="subject"
-                        value="{{ old('subject') }}"
-                        class="block w-full rounded-lg border border-emerald-500/25 bg-white/90 px-4 py-2.5 text-sm text-[#1b1b18] outline-none transition-[border-color,box-shadow] focus:border-emerald-500/55 focus:shadow-[0_0_0_3px_rgb(16_185_129/0.15)] dark:border-emerald-400/30 dark:bg-[#141c18]/95 dark:text-zinc-100"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label for="from" class="mb-1.5 block text-sm font-medium text-[#1b1b18] dark:text-zinc-100">From</label>
+                    <label for="email" class="mb-1.5 block text-sm font-medium text-[#1b1b18] dark:text-zinc-100">Email</label>
                     <input
                         type="email"
-                        name="from"
-                        id="from"
-                        value="{{ old('from') }}"
+                        name="email"
+                        id="email"
+                        value="{{ old('email') }}"
                         class="block w-full rounded-lg border border-emerald-500/25 bg-white/90 px-4 py-2.5 text-sm text-[#1b1b18] outline-none transition-[border-color,box-shadow] focus:border-emerald-500/55 focus:shadow-[0_0_0_3px_rgb(16_185_129/0.15)] dark:border-emerald-400/30 dark:bg-[#141c18]/95 dark:text-zinc-100"
                         required
                     >
-                </div>
-
-                <div>
-                    <label for="received" class="mb-1.5 block text-sm font-medium text-[#1b1b18] dark:text-zinc-100">Received</label>
-                    <input
-                        type="datetime-local"
-                        name="received"
-                        id="received"
-                        value="{{ old('received') }}"
-                        class="block w-full rounded-lg border border-emerald-500/25 bg-white/90 px-4 py-2.5 text-sm text-[#1b1b18] outline-none transition-[border-color,box-shadow] focus:border-emerald-500/55 focus:shadow-[0_0_0_3px_rgb(16_185_129/0.15)] dark:border-emerald-400/30 dark:bg-[#141c18]/95 dark:text-zinc-100"
-                    >
-                </div>
-
-                <div>
-                    <label for="status" class="mb-1.5 block text-sm font-medium text-[#1b1b18] dark:text-zinc-100">Status</label>
-                    <select
-                        name="status"
-                        id="status"
-                        class="block w-full rounded-lg border border-emerald-500/25 bg-white/90 px-4 py-2.5 text-sm text-[#1b1b18] outline-none transition-[border-color,box-shadow] focus:border-emerald-500/55 focus:shadow-[0_0_0_3px_rgb(16_185_129/0.15)] dark:border-emerald-400/30 dark:bg-[#141c18]/95 dark:text-zinc-100"
-                    >
-                        <option value="unread" @selected(old('status') === 'unread')>Unread</option>
-                        <option value="read" @selected(old('status') === 'read')>Read</option>
-                        <option value="archived" @selected(old('status') === 'archived')>Archived</option>
-                    </select>
                 </div>
 
                 <div class="flex items-center gap-3 pt-2">
