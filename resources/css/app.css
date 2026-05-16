@@ -121,6 +121,24 @@
         @apply animate-card-blur-in opacity-100 scale-100 translate-y-0 blur-none;
     }
 
+    .datatable-wrapper .datatable-search input,
+    .datatable-wrapper .datatable-selector {
+        @apply rounded-lg border border-emerald-500/25 bg-white/90 px-3 py-1.5 text-sm text-[#1b1b18] outline-none focus:border-emerald-500/55 dark:border-emerald-400/30 dark:bg-[#141c18]/95 dark:text-zinc-100;
+    }
+
+    .datatable-wrapper .datatable-table thead th {
+        @apply border-b border-emerald-500/20 font-medium text-[#1b1b18] dark:border-emerald-400/25 dark:text-zinc-100;
+    }
+
+    .datatable-wrapper .datatable-table tbody td {
+        @apply border-b border-emerald-500/10 text-gray-600 dark:border-emerald-400/15 dark:text-zinc-400;
+    }
+
+    .datatable-wrapper .datatable-info,
+    .datatable-wrapper .datatable-pagination {
+        @apply text-sm text-gray-500 dark:text-zinc-400;
+    }
+
     @media (prefers-reduced-motion: reduce) {
         .command-modal.is-open .command-modal-backdrop {
             backdrop-filter: blur(16px);

@@ -1,1 +1,1 @@
-//
+import './emails-table.js';
