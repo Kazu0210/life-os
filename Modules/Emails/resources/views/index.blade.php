@@ -33,4 +33,6 @@
             </table>
         </div>
     </main>
+
+    <x-emails::delete-email-alert-dialog />
 </x-emails::layouts.master>

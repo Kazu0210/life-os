@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { DataTable } from 'simple-datatables';
 import 'simple-datatables/dist/style.css';
+import { confirmDeleteEmail } from './delete-email-alert-dialog.js';
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
@@ -49,7 +50,9 @@ async function copyEmail(email, button) {
 }
 
 async function deleteEmail(id, email, button, deleteBaseUrl, dataTable) {
-    if (! confirm(`Delete ${email}?`)) {
+    const confirmed = await confirmDeleteEmail(email);
+
+    if (! confirmed) {
         return;
     }
 
