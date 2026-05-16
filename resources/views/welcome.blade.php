@@ -20,6 +20,6 @@
             </h1>
         </main>
 
-        @include('components.command-modal')
+        <x-command-modal />
     </body>
 </html>
