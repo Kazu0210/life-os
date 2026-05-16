@@ -3,6 +3,7 @@
 namespace Modules\Emails\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Modules\Emails\Models\Email;
@@ -15,6 +16,15 @@ class EmailsController extends Controller
     public function index()
     {
         return view('emails::index');
+    }
+
+    public function data(): JsonResponse
+    {
+        $emails = Email::query()
+            ->latest()
+            ->get(['id', 'email', 'created_at']);
+
+        return response()->json($emails);
     }
 
     /**

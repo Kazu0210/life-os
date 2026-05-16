@@ -16,13 +16,16 @@
                 </a>
             </div>
 
-            <table id="emails-table" class="w-full text-left text-sm">
+            <table
+                id="emails-table"
+                class="w-full text-left text-sm"
+                data-url="{{ route('emails.data') }}"
+            >
                 <thead>
                     <tr>
-                        <th>Subject</th>
-                        <th>From</th>
-                        <th>Received</th>
-                        <th>Status</th>
+                        <th>Email</th>
+                        <th>Added</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
